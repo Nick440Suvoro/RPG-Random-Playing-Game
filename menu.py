@@ -22,6 +22,8 @@ def menu_fight(p):
     e.damage += p.kills * randint(0, 3)
     tmp = randint(0, 8)
 
+    checker = True
+
     while p.hp > 0 or e.hp > 0:
         print("================================================")
         print(f"Твой hp: {p.hp}; Урон: {p.damage}")
@@ -39,7 +41,7 @@ def menu_fight(p):
             p.hp -= e.damage
             print("ИДЁТ БИТВА!")
 
-        if n == 2:
+        elif n == 2:
 
             p.turn += 1
             p.hp += randint(1, 5)
@@ -48,11 +50,17 @@ def menu_fight(p):
             if p.hp > 100 + p.kills * 5 + 20 * p.boss_kills:
                 p.hp = 100 + p.kills * 5 + 20 * p.boss_kills
 
-        if p.hp < 0 or p.hp < 0 and e.hp < 0:
+        else:
+            print("Ты подорвался на мине и погиб!")
+            print("Game OVER!!!")
+            checker = False
+            return menu_end(p)
+
+        if p.hp < 0 or p.hp < 0 and e.hp < 0 and checker:
             print("Game OVER!!!")
             return 0
 
-        if e.hp < 0 and p.hp > 0:
+        if e.hp < 0 and p.hp > 0 and checker:
             print("FATALITY!!!")
             p.kills += 1
             p.damage += randint(0, 2)
@@ -67,7 +75,7 @@ def menu_end(p):
     print(f'Ты убил: {p.boss_kills} боссов')
     print(f'Ходов: {p.turn}')
     input()
-    return
+    sys.exit()
 
 
 def menu_boss_fight(p):
@@ -83,7 +91,7 @@ def menu_boss_fight(p):
         print("================================================")
         print("1)Ударить")
         print("2)Хил 1-5")
-        print(f"3)Ульта{ult_tmp}")
+        print(f"3)Ульта {ult_tmp}")
 
         n = int(input("Что делать: "))
         print("================================================")
@@ -94,8 +102,7 @@ def menu_boss_fight(p):
             p.hp -= b.damage
             print("ИДЁТ ВЕЛИКАЯ БИТВА!!!!!")
 
-        if n == 2:
-
+        elif n == 2:
             ult_tmp += 1
             p.hp += randint(1, 5)
             print("ИСПОЛЬЗУЮ АПТЕЧКУ!!!!!")
@@ -103,11 +110,16 @@ def menu_boss_fight(p):
             if p.hp > 100 + p.kills * 5 + 20 * p.boss_kills:
                 p.hp = 100 + p.kills * 5 + 20 * p.boss_kills
 
-        if n == 3:
+        elif n == 3:
             b.hp -= ult_tmp
             p.hp -= b.damage // 2
             ult_tmp = 0
             print("ИСПОЛЬЗУЮ УЛЬТУ!!!!!")
+
+        else:
+            print("Тебя завалило камнями, и ты погиб!")
+            menu_end(p)
+            return 0
 
         if p.hp < 0:
             print("Game OVER!!!")
@@ -119,7 +131,6 @@ def menu_boss_fight(p):
             p.damage += randint(0, 5)
             p.hp += 20
             return 0
-
 
 def main_menu(p):
     check = True
